@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dialup - The Retro Social Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #663399;
+            font-family: "Courier New", Courier, monospace;
+            color: #000;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        header {
+            background: linear-gradient(180deg, #8B4789 0%, #663399 100%);
+            border: 3px ridge #9370DB;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 5px 5px 0px #000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            font-size: 48px;
+            color: #FFD700;
+            text-shadow: 3px 3px #000, -1px -1px #FF1493;
+            font-family: Impact, fantasy;
+            letter-spacing: 3px;
+        }
+
+        .connecting-gif {
+            background: #000;
+            color: #00FF00;
+            padding: 5px 10px;
+            border: 2px solid #00FF00;
+            font-size: 11px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .main-content {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sidebar {
+            width: 200px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-box {
+            background: #8B7B8B;
+            border: 3px ridge #9370DB;
+            margin-bottom: 10px;
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        .sidebar-title {
+            background: linear-gradient(180deg, #663399 0%, #4B0082 100%);
+            color: #FFD700;
+            padding: 8px;
+            font-weight: bold;
+            border-bottom: 2px solid #000;
+            text-transform: lowercase;
+        }
+
+        .sidebar-content {
+            padding: 10px;
+            background: #E6E6FA;
+        }
+
+        .sidebar-content a {
+            display: block;
+            color: #00008B;
+            text-decoration: none;
+            padding: 5px;
+            margin: 2px 0;
+            background: #D8BFD8;
+            border: 1px solid #9370DB;
+            font-size: 12px;
+        }
+
+        .sidebar-content a:hover {
+            background: #FFD700;
+            color: #000;
+        }
+
+        .main-feed {
+            flex: 1;
+            background: #E6E6FA;
+            border: 3px ridge #9370DB;
+            padding: 15px;
+            box-shadow: 5px 5px 0px #000;
+        }
+
+        .feed-title {
+            background: linear-gradient(180deg, #663399 0%, #4B0082 100%);
+            color: #FFD700;
+            padding: 10px;
+            margin: -15px -15px 15px -15px;
+            border-bottom: 3px solid #000;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .post {
+            background: #DDA0DD;
+            border: 2px solid #8B008B;
+            margin-bottom: 15px;
+            padding: 12px;
+            box-shadow: 3px 3px 0px #663399;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #8B008B;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: #FFD700;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .username {
+            color: #4B0082;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .timestamp {
+            color: #8B008B;
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        .post-content {
+            background: #F0E68C;
+            padding: 10px;
+            border: 2px solid #8B008B;
+            margin-bottom: 10px;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .post-actions button {
+            background: #663399;
+            color: #FFD700;
+            border: 2px outset #9370DB;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .post-actions button:active {
+            border-style: inset;
+        }
+
+        .post-actions button:hover {
+            background: #8B008B;
+        }
+
+        .new-post-form {
+            background: #DDA0DD;
+            border: 3px ridge #9370DB;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 3px 3px 0px #663399;
+        }
+
+        .new-post-form h3 {
+            color: #4B0082;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: #F0E68C;
+            border: 2px inset #8B008B;
+            padding: 8px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 12px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #663399;
+            color: #FFD700;
+            border: 2px outset #9370DB;
+            padding: 8px 25px;
+            cursor: pointer;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .submit-btn:active {
+            border-style: inset;
+        }
+
+        .submit-btn:hover {
+            background: #8B008B;
+        }
+
+        marquee {
+            background: #000;
+            color: #00FF00;
+            padding: 5px;
+            border: 2px solid #00FF00;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .counter {
+            background: #000;
+            color: #FF0000;
+            padding: 5px;
+            text-align: center;
+            font-size: 11px;
+            border: 2px solid #FF0000;
+            margin-top: 10px;
+        }
+
+        .online-users {
+            background: #98FB98;
+            border: 2px solid #228B22;
+            padding: 8px;
+            margin-top: 10px;
+        }
+
+        .online-users span {
+            display: inline-block;
+            background: #FFD700;
+            padding: 2px 8px;
+            margin: 2px;
+            border: 1px solid #000;
+            font-size: 11px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #FFD700;
+            font-size: 11px;
+            margin-top: 20px;
+            border-top: 3px ridge #9370DB;
+        }
+
+        .webring {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .webring a {
+            color: #00FFFF;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>dialup</h1>
+                <span class="connecting-gif">◄◄ CONNECTING... ►►</span>
+            </div>
+            <marquee>★ Welcome to dialup - The ULTIMATE retro social network! ★ Now with 56k support! ★ Tell your friends! ★</marquee>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="sidebar-box">
+                    <div class="sidebar-title">getting around</div>
+                    <div class="sidebar-content">
+                        <a href="#" onclick="showAlert('home')">» home</a>
+                        <a href="#" onclick="showAlert('profile')">» my profile</a>
+                        <a href="#" onclick="showAlert('friends')">» friends</a>
+                        <a href="#" onclick="showAlert('messages')">» messages (3 new!)</a>
+                        <a href="#" onclick="showAlert('chatroom')">» chatroom</a>
+                        <a href="#" onclick="showAlert('photos')">» photo albums</a>
+                    </div>
+                </div>
+
+                <div class="sidebar-box">
+                    <div class="sidebar-title">who's online</div>
+                    <div class="sidebar-content">
+                        <div class="online-users">
+                            <span>XxOzzyxX</span>
+                            <span>Sk8erBoi</span>
+                            <span>RaveGrl99</span>
+                            <span>MetalHead</span>
+                            <span>CoolDude</span>
+                            <span>Kelly_O</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-box">
+                    <div class="sidebar-title">buddy icons</div>
+                    <div class="sidebar-content" style="text-align: center;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                            <div style="background: #FFD700; border: 1px solid #000; padding: 10px;">😎</div>
+                            <div style="background: #FF69B4; border: 1px solid #000; padding: 10px;">🎸</div>
+                            <div style="background: #00FFFF; border: 1px solid #000; padding: 10px;">🎵</div>
+                            <div style="background: #98FB98; border: 1px solid #000; padding: 10px;">🌟</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-box">
+                    <div class="sidebar-title">stats</div>
+                    <div class="sidebar-content">
+                        <div class="counter">
+                            👁️ YOU ARE VISITOR #<span id="visitor-count">42069</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="main-feed">
+                <div class="feed-title">★★★ THE FEED ★★★</div>
+
+                <div class="new-post-form">
+                    <h3>▼ POST TO YOUR WALL ▼</h3>
+                    <textarea id="post-content" placeholder="what's on your mind?? type here..."></textarea>
+                    <button class="submit-btn" onclick="createPost()">[ POST IT! ]</button>
+                </div>
+
+                <div id="posts-container">
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="avatar" style="background: #FF69B4;">🎸</div>
+                            <div>
+                                <div class="username">XxOzzyxX</div>
+                                <div class="timestamp">posted 2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            SHARON!!! Where did you put my remote control?? I can't find the bloody thing anywhere!!! This is madness!!!
+                        </div>
+                        <div class="post-actions">
+                            <button onclick="likePost(this)">👍 LIKE (23)</button>
+                            <button onclick="showAlert('comment')">💬 COMMENT</button>
+                            <button onclick="showAlert('share')">📤 SHARE</button>
+                        </div>
+                    </div>
+
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="avatar" style="background: #FFD700;">👑</div>
+                            <div>
+                                <div class="username">Kelly_O</div>
+                                <div class="timestamp">posted 4 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            omg you guys check out my new photoshoot!!! feeling like a ROCKSTAR today!!! 🌟✨💜 click the link in my profile!!!
+                        </div>
+                        <div class="post-actions">
+                            <button onclick="likePost(this)">👍 LIKE (156)</button>
+                            <button onclick="showAlert('comment')">💬 COMMENT</button>
+                            <button onclick="showAlert('share')">📤 SHARE</button>
+                        </div>
+                    </div>
+
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="avatar" style="background: #00FFFF;">🎵</div>
+                            <div>
+                                <div class="username">Sk8erBoi</div>
+                                <div class="timestamp">posted 6 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            just downloaded the new blink-182 album on napster!!! this is gonna be SICK!!! who wants to come to the show on friday??
+                        </div>
+                        <div class="post-actions">
+                            <button onclick="likePost(this)">👍 LIKE (89)</button>
+                            <button onclick="showAlert('comment')">💬 COMMENT</button>
+                            <button onclick="showAlert('share')">📤 SHARE</button>
+                        </div>
+                    </div>
+
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="avatar" style="background: #98FB98;">💀</div>
+                            <div>
+                                <div class="username">MetalHead</div>
+                                <div class="timestamp">posted 8 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            anyone else watching MTV right now?? The Osbournes is HILARIOUS!!! best show ever made!! totally adding it to my favorites list 🤘🤘🤘
+                        </div>
+                        <div class="post-actions">
+                            <button onclick="likePost(this)">👍 LIKE (234)</button>
+                            <button onclick="showAlert('comment')">💬 COMMENT</button>
+                            <button onclick="showAlert('share')">📤 SHARE</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer>
+            <div class="webring">
+                <a href="#" onclick="showAlert('webring')">[PREV]</a>
+                <span style="color: #FFD700;">★ DIALUP WEBRING ★</span>
+                <a href="#" onclick="showAlert('webring')">[NEXT]</a>
+            </div>
+            <p>Best viewed in Netscape Navigator 4.0 or Internet Explorer 5.0</p>
+            <p>© 2002 dialup networks inc. | all rights reserved</p>
+            <p style="font-size: 9px; margin-top: 10px;">This site is GeoCities certified! 🏆</p>
+        </footer>
+    </div>
+
+    <script>
+        function showAlert(feature) {
+            const messages = {
+                'home': '🏠 You are already on the home page!',
+                'profile': '👤 Loading your MySpace... I mean, your profile!',
+                'friends': '👥 You have 8 friends in your network!',
+                'messages': '📧 You have 3 new messages from XxOzzyxX!',
+                'chatroom': '💬 Entering chatroom... A/S/L?',
+                'photos': '📸 Loading your photo album... (this might take 5 minutes on dialup)',
+                'comment': '💭 Comment posted! (just kidding, this is a demo)',
+                'share': '📤 Shared to your wall!',
+                'webring': '🔗 Navigating to a random 90s website...'
+            };
+            alert(messages[feature] || '✨ Feature coming soon!');
+        }
+
+        function likePost(button) {
+            const currentLikes = parseInt(button.textContent.match(/\d+/)[0]);
+            button.textContent = `👍 LIKE (${currentLikes + 1})`;
+            button.style.background = '#FF1493';
+        }
+
+        function createPost() {
+            const content = document.getElementById('post-content').value;
+            if (!content.trim()) {
+                alert('⚠️ Please type something first!');
+                return;
+            }
+
+            const postsContainer = document.getElementById('posts-container');
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            
+            const randomAvatars = ['😎', '🎸', '🌟', '💜', '🎵', '✨'];
+            const randomColors = ['#FF69B4', '#FFD700', '#00FFFF', '#98FB98', '#DDA0DD'];
+            const randomAvatar = randomAvatars[Math.floor(Math.random() * randomAvatars.length)];
+            const randomColor = randomColors[Math.floor(Math.random() * randomColors.length)];
+            
+            newPost.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar" style="background: ${randomColor};">${randomAvatar}</div>
+                    <div>
+                        <div class="username">YOU</div>
+                        <div class="timestamp">posted just now</div>
+                    </div>
+                </div>
+                <div class="post-content">${content}</div>
+                <div class="post-actions">
+                    <button onclick="likePost(this)">👍 LIKE (0)</button>
+                    <button onclick="showAlert('comment')">💬 COMMENT</button>
+                    <button onclick="showAlert('share')">📤 SHARE</button>
+                </div>
+            `;
+            
+            postsContainer.insertBefore(newPost, postsContainer.firstChild);
+            document.getElementById('post-content').value = '';
+            
+            alert('✅ Your post has been added to the feed!');
+        }
+
+        // Animate visitor counter
+        let count = 42069;
+        setInterval(() => {
+            count++;
+            document.getElementById('visitor-count').textContent = count;
+        }, 5000);
+    </script>
+</body>
+</html>
