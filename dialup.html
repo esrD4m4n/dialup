@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>dialup - The Retro Social Network</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background: #663399;
@@ -18,11 +14,7 @@
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 10px;
-        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 10px; }
 
         header {
             background: linear-gradient(180deg, #8B4789 0%, #663399 100%);
@@ -32,12 +24,7 @@
             box-shadow: 5px 5px 0px #000;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
+        .logo { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
 
         .logo h1 {
             font-size: 48px;
@@ -56,20 +43,87 @@
             animation: blink 1s infinite;
         }
 
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
-        }
+        @keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0.3} }
 
-        .main-content {
+        /* ── MUSIC PLAYER ── */
+        .music-player {
+            background: #000;
+            border: 3px ridge #00FF00;
+            padding: 10px 15px;
+            margin-top: 10px;
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            box-shadow: 0 0 10px #00FF00;
         }
 
-        .sidebar {
-            width: 200px;
-            flex-shrink: 0;
+        .music-title {
+            color: #00FF00;
+            font-size: 12px;
+            font-weight: bold;
+            flex: 1;
+            min-width: 160px;
+            overflow: hidden;
+            white-space: nowrap;
         }
+
+        .music-title .song-name { color: #FFD700; }
+
+        .player-btn {
+            background: #1a1a1a;
+            color: #00FF00;
+            border: 2px outset #00AA00;
+            padding: 5px 12px;
+            cursor: pointer;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            font-size: 13px;
+            min-width: 36px;
+        }
+        .player-btn:hover { background: #003300; }
+        .player-btn:active { border-style: inset; }
+        .player-btn.active { background: #003300; border-color: #00FF00; color: #FFD700; }
+
+        .vol-label { color: #00FF00; font-size: 11px; white-space: nowrap; }
+
+        input[type=range].vol-slider {
+            -webkit-appearance: none;
+            width: 80px; height: 8px;
+            background: #003300;
+            border: 1px solid #00FF00;
+            outline: none;
+        }
+        input[type=range].vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px;
+            background: #00FF00;
+            cursor: pointer;
+        }
+
+        .vis-bar-wrap { display: flex; align-items: flex-end; gap: 2px; height: 24px; }
+        .vis-bar {
+            width: 4px; background: #00FF00; border-radius: 1px;
+            animation: visBounce 0.4s ease-in-out infinite alternate;
+            height: 4px;
+        }
+        .vis-bar:nth-child(1){animation-duration:0.35s}
+        .vis-bar:nth-child(2){animation-duration:0.50s}
+        .vis-bar:nth-child(3){animation-duration:0.28s}
+        .vis-bar:nth-child(4){animation-duration:0.60s}
+        .vis-bar:nth-child(5){animation-duration:0.42s}
+        .vis-bar:nth-child(6){animation-duration:0.32s}
+        @keyframes visBounce { from{height:4px} to{height:22px} }
+        .vis-bar.paused { animation-play-state: paused; height: 4px; }
+
+        marquee {
+            background: #000; color: #00FF00;
+            padding: 5px; border: 2px solid #00FF00;
+            margin-bottom: 10px; font-weight: bold;
+        }
+
+        .main-content { display: flex; gap: 10px; }
+        .sidebar { width: 200px; flex-shrink: 0; }
 
         .sidebar-box {
             background: #8B7B8B;
@@ -80,451 +134,578 @@
 
         .sidebar-title {
             background: linear-gradient(180deg, #663399 0%, #4B0082 100%);
-            color: #FFD700;
-            padding: 8px;
-            font-weight: bold;
-            border-bottom: 2px solid #000;
-            text-transform: lowercase;
+            color: #FFD700; padding: 8px; font-weight: bold;
+            border-bottom: 2px solid #000; text-transform: lowercase;
         }
 
-        .sidebar-content {
-            padding: 10px;
-            background: #E6E6FA;
-        }
-
+        .sidebar-content { padding: 10px; background: #E6E6FA; }
         .sidebar-content a {
-            display: block;
-            color: #00008B;
-            text-decoration: none;
-            padding: 5px;
-            margin: 2px 0;
-            background: #D8BFD8;
-            border: 1px solid #9370DB;
-            font-size: 12px;
+            display: block; color: #00008B; text-decoration: none;
+            padding: 5px; margin: 2px 0; background: #D8BFD8;
+            border: 1px solid #9370DB; font-size: 12px;
         }
-
-        .sidebar-content a:hover {
-            background: #FFD700;
-            color: #000;
-        }
+        .sidebar-content a:hover { background: #FFD700; color: #000; }
 
         .main-feed {
-            flex: 1;
-            background: #E6E6FA;
-            border: 3px ridge #9370DB;
-            padding: 15px;
+            flex: 1; background: #E6E6FA;
+            border: 3px ridge #9370DB; padding: 15px;
             box-shadow: 5px 5px 0px #000;
         }
 
         .feed-title {
             background: linear-gradient(180deg, #663399 0%, #4B0082 100%);
-            color: #FFD700;
-            padding: 10px;
+            color: #FFD700; padding: 10px;
             margin: -15px -15px 15px -15px;
-            border-bottom: 3px solid #000;
-            font-size: 20px;
-            font-weight: bold;
+            border-bottom: 3px solid #000; font-size: 20px; font-weight: bold;
         }
 
         .post {
-            background: #DDA0DD;
-            border: 2px solid #8B008B;
-            margin-bottom: 15px;
-            padding: 12px;
+            background: #DDA0DD; border: 2px solid #8B008B;
+            margin-bottom: 15px; padding: 12px;
             box-shadow: 3px 3px 0px #663399;
         }
 
         .post-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px; padding-bottom: 8px;
             border-bottom: 2px dashed #8B008B;
         }
 
         .avatar {
-            width: 50px;
-            height: 50px;
-            background: #FFD700;
-            border: 2px solid #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 24px;
+            width: 50px; height: 50px; background: #FFD700;
+            border: 2px solid #000; display: flex; align-items: center;
+            justify-content: center; font-weight: bold; font-size: 24px;
         }
 
-        .username {
-            color: #4B0082;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .timestamp {
-            color: #8B008B;
-            font-size: 11px;
-            font-style: italic;
-        }
+        .username { color: #4B0082; font-weight: bold; font-size: 14px; }
+        .timestamp { color: #8B008B; font-size: 11px; font-style: italic; }
 
         .post-content {
-            background: #F0E68C;
-            padding: 10px;
-            border: 2px solid #8B008B;
-            margin-bottom: 10px;
-            color: #000;
-            line-height: 1.5;
+            background: #F0E68C; padding: 10px;
+            border: 2px solid #8B008B; margin-bottom: 10px;
+            color: #000; line-height: 1.5;
         }
 
-        .post-actions {
-            display: flex;
-            gap: 10px;
-        }
-
+        .post-actions { display: flex; gap: 10px; flex-wrap: wrap; }
         .post-actions button {
-            background: #663399;
-            color: #FFD700;
-            border: 2px outset #9370DB;
-            padding: 5px 15px;
-            cursor: pointer;
+            background: #663399; color: #FFD700;
+            border: 2px outset #9370DB; padding: 5px 15px; cursor: pointer;
             font-family: "Courier New", Courier, monospace;
-            font-weight: bold;
-            font-size: 11px;
+            font-weight: bold; font-size: 11px;
         }
-
-        .post-actions button:active {
-            border-style: inset;
-        }
-
-        .post-actions button:hover {
-            background: #8B008B;
-        }
+        .post-actions button:active { border-style: inset; }
+        .post-actions button:hover { background: #8B008B; }
 
         .new-post-form {
-            background: #DDA0DD;
-            border: 3px ridge #9370DB;
-            padding: 15px;
-            margin-bottom: 20px;
+            background: #DDA0DD; border: 3px ridge #9370DB;
+            padding: 15px; margin-bottom: 20px;
             box-shadow: 3px 3px 0px #663399;
         }
-
-        .new-post-form h3 {
-            color: #4B0082;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
+        .new-post-form h3 { color: #4B0082; margin-bottom: 10px; font-size: 16px; }
 
         textarea {
-            width: 100%;
-            height: 100px;
-            background: #F0E68C;
-            border: 2px inset #8B008B;
-            padding: 8px;
+            width: 100%; height: 80px; background: #F0E68C;
+            border: 2px inset #8B008B; padding: 8px;
             font-family: "Courier New", Courier, monospace;
-            font-size: 12px;
-            resize: vertical;
+            font-size: 12px; resize: vertical;
         }
 
         .submit-btn {
-            background: #663399;
-            color: #FFD700;
-            border: 2px outset #9370DB;
-            padding: 8px 25px;
-            cursor: pointer;
+            background: #663399; color: #FFD700;
+            border: 2px outset #9370DB; padding: 8px 25px; cursor: pointer;
             font-family: "Courier New", Courier, monospace;
-            font-weight: bold;
-            margin-top: 10px;
-            font-size: 14px;
+            font-weight: bold; margin-top: 10px; font-size: 14px;
         }
-
-        .submit-btn:active {
-            border-style: inset;
-        }
-
-        .submit-btn:hover {
-            background: #8B008B;
-        }
-
-        marquee {
-            background: #000;
-            color: #00FF00;
-            padding: 5px;
-            border: 2px solid #00FF00;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+        .submit-btn:active { border-style: inset; }
+        .submit-btn:hover { background: #8B008B; }
 
         .counter {
-            background: #000;
-            color: #FF0000;
-            padding: 5px;
-            text-align: center;
-            font-size: 11px;
-            border: 2px solid #FF0000;
+            background: #000; color: #FF0000; padding: 5px;
+            text-align: center; font-size: 11px; border: 2px solid #FF0000;
             margin-top: 10px;
         }
 
-        .online-users {
-            background: #98FB98;
-            border: 2px solid #228B22;
-            padding: 8px;
-            margin-top: 10px;
-        }
-
+        .online-users { background: #98FB98; border: 2px solid #228B22; padding: 8px; margin-top: 10px; }
         .online-users span {
-            display: inline-block;
-            background: #FFD700;
-            padding: 2px 8px;
-            margin: 2px;
-            border: 1px solid #000;
-            font-size: 11px;
+            display: inline-block; background: #FFD700;
+            padding: 2px 8px; margin: 2px; border: 1px solid #000; font-size: 11px;
         }
+
+        .modem-btn {
+            background: #000; color: #FF6600;
+            border: 2px outset #FF6600; padding: 4px 10px; cursor: pointer;
+            font-family: "Courier New", monospace; font-size: 11px; font-weight: bold;
+        }
+        .modem-btn:hover { background: #1a0a00; }
+        .modem-btn:active { border-style: inset; }
 
         footer {
-            text-align: center;
-            padding: 20px;
-            color: #FFD700;
-            font-size: 11px;
-            margin-top: 20px;
-            border-top: 3px ridge #9370DB;
+            text-align: center; padding: 20px; color: #FFD700;
+            font-size: 11px; margin-top: 20px; border-top: 3px ridge #9370DB;
         }
+        .webring { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
+        .webring a { color: #00FFFF; text-decoration: underline; }
 
-        .webring {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .webring a {
-            color: #00FFFF;
-            text-decoration: underline;
+        #toast {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #000; color: #00FF00;
+            border: 2px solid #00FF00; padding: 10px 16px;
+            font-family: "Courier New", monospace; font-size: 12px;
+            display: none; z-index: 9999; box-shadow: 3px 3px 0 #006600;
+            max-width: 280px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <h1>dialup</h1>
-                <span class="connecting-gif">◄◄ CONNECTING... ►►</span>
-            </div>
-            <marquee>★ Welcome to dialup - The ULTIMATE retro social network! ★ Now with 56k support! ★ Tell your friends! ★</marquee>
-        </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <div class="sidebar-box">
-                    <div class="sidebar-title">getting around</div>
-                    <div class="sidebar-content">
-                        <a href="#" onclick="showAlert('home')">» home</a>
-                        <a href="#" onclick="showAlert('profile')">» my profile</a>
-                        <a href="#" onclick="showAlert('friends')">» friends</a>
-                        <a href="#" onclick="showAlert('messages')">» messages (3 new!)</a>
-                        <a href="#" onclick="showAlert('chatroom')">» chatroom</a>
-                        <a href="#" onclick="showAlert('photos')">» photo albums</a>
-                    </div>
-                </div>
+<div id="toast"></div>
 
-                <div class="sidebar-box">
-                    <div class="sidebar-title">who's online</div>
-                    <div class="sidebar-content">
-                        <div class="online-users">
-                            <span>XxOzzyxX</span>
-                            <span>Sk8erBoi</span>
-                            <span>RaveGrl99</span>
-                            <span>MetalHead</span>
-                            <span>CoolDude</span>
-                            <span>Kelly_O</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sidebar-box">
-                    <div class="sidebar-title">buddy icons</div>
-                    <div class="sidebar-content" style="text-align: center;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                            <div style="background: #FFD700; border: 1px solid #000; padding: 10px;">😎</div>
-                            <div style="background: #FF69B4; border: 1px solid #000; padding: 10px;">🎸</div>
-                            <div style="background: #00FFFF; border: 1px solid #000; padding: 10px;">🎵</div>
-                            <div style="background: #98FB98; border: 1px solid #000; padding: 10px;">🌟</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="sidebar-box">
-                    <div class="sidebar-title">stats</div>
-                    <div class="sidebar-content">
-                        <div class="counter">
-                            👁️ YOU ARE VISITOR #<span id="visitor-count">42069</span>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <main class="main-feed">
-                <div class="feed-title">★★★ THE FEED ★★★</div>
-
-                <div class="new-post-form">
-                    <h3>▼ POST TO YOUR WALL ▼</h3>
-                    <textarea id="post-content" placeholder="what's on your mind?? type here..."></textarea>
-                    <button class="submit-btn" onclick="createPost()">[ POST IT! ]</button>
-                </div>
-
-                <div id="posts-container">
-                    <div class="post">
-                        <div class="post-header">
-                            <div class="avatar" style="background: #FF69B4;">🎸</div>
-                            <div>
-                                <div class="username">XxOzzyxX</div>
-                                <div class="timestamp">posted 2 hours ago</div>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            SHARON!!! Where did you put my remote control?? I can't find the bloody thing anywhere!!! This is madness!!!
-                        </div>
-                        <div class="post-actions">
-                            <button onclick="likePost(this)">👍 LIKE (23)</button>
-                            <button onclick="showAlert('comment')">💬 COMMENT</button>
-                            <button onclick="showAlert('share')">📤 SHARE</button>
-                        </div>
-                    </div>
-
-                    <div class="post">
-                        <div class="post-header">
-                            <div class="avatar" style="background: #FFD700;">👑</div>
-                            <div>
-                                <div class="username">Kelly_O</div>
-                                <div class="timestamp">posted 4 hours ago</div>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            omg you guys check out my new photoshoot!!! feeling like a ROCKSTAR today!!! 🌟✨💜 click the link in my profile!!!
-                        </div>
-                        <div class="post-actions">
-                            <button onclick="likePost(this)">👍 LIKE (156)</button>
-                            <button onclick="showAlert('comment')">💬 COMMENT</button>
-                            <button onclick="showAlert('share')">📤 SHARE</button>
-                        </div>
-                    </div>
-
-                    <div class="post">
-                        <div class="post-header">
-                            <div class="avatar" style="background: #00FFFF;">🎵</div>
-                            <div>
-                                <div class="username">Sk8erBoi</div>
-                                <div class="timestamp">posted 6 hours ago</div>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            just downloaded the new blink-182 album on napster!!! this is gonna be SICK!!! who wants to come to the show on friday??
-                        </div>
-                        <div class="post-actions">
-                            <button onclick="likePost(this)">👍 LIKE (89)</button>
-                            <button onclick="showAlert('comment')">💬 COMMENT</button>
-                            <button onclick="showAlert('share')">📤 SHARE</button>
-                        </div>
-                    </div>
-
-                    <div class="post">
-                        <div class="post-header">
-                            <div class="avatar" style="background: #98FB98;">💀</div>
-                            <div>
-                                <div class="username">MetalHead</div>
-                                <div class="timestamp">posted 8 hours ago</div>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            anyone else watching MTV right now?? The Osbournes is HILARIOUS!!! best show ever made!! totally adding it to my favorites list 🤘🤘🤘
-                        </div>
-                        <div class="post-actions">
-                            <button onclick="likePost(this)">👍 LIKE (234)</button>
-                            <button onclick="showAlert('comment')">💬 COMMENT</button>
-                            <button onclick="showAlert('share')">📤 SHARE</button>
-                        </div>
-                    </div>
-                </div>
-            </main>
+<div class="container">
+    <header>
+        <div class="logo">
+            <h1>dialup</h1>
+            <span class="connecting-gif">◄◄ CONNECTING... ►►</span>
+            <button class="modem-btn" onclick="playModem()">📡 MODEM SFX</button>
         </div>
 
-        <footer>
-            <div class="webring">
-                <a href="#" onclick="showAlert('webring')">[PREV]</a>
-                <span style="color: #FFD700;">★ DIALUP WEBRING ★</span>
-                <a href="#" onclick="showAlert('webring')">[NEXT]</a>
+        <div class="music-player">
+            <div class="vis-bar-wrap" id="visBars">
+                <div class="vis-bar paused"></div>
+                <div class="vis-bar paused"></div>
+                <div class="vis-bar paused"></div>
+                <div class="vis-bar paused"></div>
+                <div class="vis-bar paused"></div>
+                <div class="vis-bar paused"></div>
             </div>
-            <p>Best viewed in Netscape Navigator 4.0 or Internet Explorer 5.0</p>
-            <p>© 2002 dialup networks inc. | all rights reserved</p>
-            <p style="font-size: 9px; margin-top: 10px;">This site is GeoCities certified! 🏆</p>
-        </footer>
-    </div>
+            <div class="music-title">♪ NOW PLAYING: <span class="song-name" id="songName">-- press play --</span></div>
+            <button class="player-btn" onclick="prevSong()">⏮</button>
+            <button class="player-btn" id="playBtn" onclick="togglePlay()">▶ PLAY</button>
+            <button class="player-btn" onclick="nextSong()">⏭</button>
+            <span class="vol-label">VOL:</span>
+            <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="60" oninput="setVolume(this.value)">
+        </div>
 
-    <script>
-        function showAlert(feature) {
-            const messages = {
-                'home': '🏠 You are already on the home page!',
-                'profile': '👤 Loading your MySpace... I mean, your profile!',
-                'friends': '👥 You have 8 friends in your network!',
-                'messages': '📧 You have 3 new messages from XxOzzyxX!',
-                'chatroom': '💬 Entering chatroom... A/S/L?',
-                'photos': '📸 Loading your photo album... (this might take 5 minutes on dialup)',
-                'comment': '💭 Comment posted! (just kidding, this is a demo)',
-                'share': '📤 Shared to your wall!',
-                'webring': '🔗 Navigating to a random 90s website...'
-            };
-            alert(messages[feature] || '✨ Feature coming soon!');
-        }
+        <marquee>★ Welcome to dialup - The ULTIMATE retro social network! ★ Now with 56k support! ★ MIDI music enabled! ★ Click buddy icons for SFX! ★</marquee>
+    </header>
 
-        function likePost(button) {
-            const currentLikes = parseInt(button.textContent.match(/\d+/)[0]);
-            button.textContent = `👍 LIKE (${currentLikes + 1})`;
-            button.style.background = '#FF1493';
-        }
+    <div class="main-content">
+        <aside class="sidebar">
+            <div class="sidebar-box">
+                <div class="sidebar-title">getting around</div>
+                <div class="sidebar-content">
+                    <a href="#" onclick="navClick('home');return false">» home</a>
+                    <a href="#" onclick="navClick('profile');return false">» my profile</a>
+                    <a href="#" onclick="navClick('friends');return false">» friends</a>
+                    <a href="#" onclick="navClick('messages');return false">» messages (3 new!)</a>
+                    <a href="#" onclick="navClick('chatroom');return false">» chatroom</a>
+                    <a href="#" onclick="navClick('photos');return false">» photo albums</a>
+                </div>
+            </div>
 
-        function createPost() {
-            const content = document.getElementById('post-content').value;
-            if (!content.trim()) {
-                alert('⚠️ Please type something first!');
-                return;
-            }
-
-            const postsContainer = document.getElementById('posts-container');
-            const newPost = document.createElement('div');
-            newPost.className = 'post';
-            
-            const randomAvatars = ['😎', '🎸', '🌟', '💜', '🎵', '✨'];
-            const randomColors = ['#FF69B4', '#FFD700', '#00FFFF', '#98FB98', '#DDA0DD'];
-            const randomAvatar = randomAvatars[Math.floor(Math.random() * randomAvatars.length)];
-            const randomColor = randomColors[Math.floor(Math.random() * randomColors.length)];
-            
-            newPost.innerHTML = `
-                <div class="post-header">
-                    <div class="avatar" style="background: ${randomColor};">${randomAvatar}</div>
-                    <div>
-                        <div class="username">YOU</div>
-                        <div class="timestamp">posted just now</div>
+            <div class="sidebar-box">
+                <div class="sidebar-title">who's online</div>
+                <div class="sidebar-content">
+                    <div class="online-users">
+                        <span>XxOzzyxX</span><span>Sk8erBoi</span>
+                        <span>RaveGrl99</span><span>MetalHead</span>
+                        <span>CoolDude</span><span>Kelly_O</span>
                     </div>
                 </div>
-                <div class="post-content">${content}</div>
-                <div class="post-actions">
-                    <button onclick="likePost(this)">👍 LIKE (0)</button>
-                    <button onclick="showAlert('comment')">💬 COMMENT</button>
-                    <button onclick="showAlert('share')">📤 SHARE</button>
-                </div>
-            `;
-            
-            postsContainer.insertBefore(newPost, postsContainer.firstChild);
-            document.getElementById('post-content').value = '';
-            
-            alert('✅ Your post has been added to the feed!');
-        }
+            </div>
 
-        // Animate visitor counter
-        let count = 42069;
-        setInterval(() => {
-            count++;
-            document.getElementById('visitor-count').textContent = count;
-        }, 5000);
-    </script>
+            <div class="sidebar-box">
+                <div class="sidebar-title">buddy icons</div>
+                <div class="sidebar-content" style="text-align:center">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+                        <div style="background:#FFD700;border:1px solid #000;padding:10px;cursor:pointer" onclick="playChime()" title="ding!">😎</div>
+                        <div style="background:#FF69B4;border:1px solid #000;padding:10px;cursor:pointer" onclick="playGuitar()" title="rock!">🎸</div>
+                        <div style="background:#00FFFF;border:1px solid #000;padding:10px;cursor:pointer" onclick="playNote()" title="note!">🎵</div>
+                        <div style="background:#98FB98;border:1px solid #000;padding:10px;cursor:pointer" onclick="playStar()" title="sparkle!">🌟</div>
+                    </div>
+                    <div style="font-size:10px;color:#663399;margin-top:5px">↑ click for sounds!</div>
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <div class="sidebar-title">stats</div>
+                <div class="sidebar-content">
+                    <div class="counter">👁️ VISITOR #<span id="visitor-count">42069</span></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-feed">
+            <div class="feed-title">★★★ THE FEED ★★★</div>
+
+            <div class="new-post-form">
+                <h3>▼ POST TO YOUR WALL ▼</h3>
+                <textarea id="post-content" placeholder="what's on your mind?? type here..."></textarea>
+                <button class="submit-btn" onclick="createPost()">[ POST IT! ]</button>
+            </div>
+
+            <div id="posts-container">
+                <div class="post">
+                    <div class="post-header">
+                        <div class="avatar" style="background:#FF69B4">🎸</div>
+                        <div><div class="username">XxOzzyxX</div><div class="timestamp">posted 2 hours ago</div></div>
+                    </div>
+                    <div class="post-content">SHARON!!! Where did you put my remote control?? I can't find the bloody thing anywhere!!! This is madness!!!</div>
+                    <div class="post-actions">
+                        <button onclick="likePost(this)">👍 LIKE (23)</button>
+                        <button onclick="navClick('comment')">💬 COMMENT</button>
+                        <button onclick="navClick('share')">📤 SHARE</button>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <div class="avatar" style="background:#FFD700">👑</div>
+                        <div><div class="username">Kelly_O</div><div class="timestamp">posted 4 hours ago</div></div>
+                    </div>
+                    <div class="post-content">omg you guys check out my new photoshoot!!! feeling like a ROCKSTAR today!!! 🌟✨💜 click the link in my profile!!!</div>
+                    <div class="post-actions">
+                        <button onclick="likePost(this)">👍 LIKE (156)</button>
+                        <button onclick="navClick('comment')">💬 COMMENT</button>
+                        <button onclick="navClick('share')">📤 SHARE</button>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <div class="avatar" style="background:#00FFFF">🎵</div>
+                        <div><div class="username">Sk8erBoi</div><div class="timestamp">posted 6 hours ago</div></div>
+                    </div>
+                    <div class="post-content">just downloaded the new blink-182 album on napster!!! this is gonna be SICK!!! who wants to come to the show on friday??</div>
+                    <div class="post-actions">
+                        <button onclick="likePost(this)">👍 LIKE (89)</button>
+                        <button onclick="navClick('comment')">💬 COMMENT</button>
+                        <button onclick="navClick('share')">📤 SHARE</button>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <div class="avatar" style="background:#98FB98">💀</div>
+                        <div><div class="username">MetalHead</div><div class="timestamp">posted 8 hours ago</div></div>
+                    </div>
+                    <div class="post-content">anyone else watching MTV right now?? The Osbournes is HILARIOUS!!! best show ever made!! totally adding it to my favorites list 🤘🤘🤘</div>
+                    <div class="post-actions">
+                        <button onclick="likePost(this)">👍 LIKE (234)</button>
+                        <button onclick="navClick('comment')">💬 COMMENT</button>
+                        <button onclick="navClick('share')">📤 SHARE</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="webring">
+            <a href="#" onclick="navClick('webring');return false">[PREV]</a>
+            <span style="color:#FFD700">★ DIALUP WEBRING ★</span>
+            <a href="#" onclick="navClick('webring');return false">[NEXT]</a>
+        </div>
+        <p>Best viewed in Netscape Navigator 4.0 or Internet Explorer 5.0</p>
+        <p>© 2002 dialup networks inc. | all rights reserved</p>
+        <p style="font-size:9px;margin-top:10px">This site is GeoCities certified! 🏆 | Sound powered by Web Audio API</p>
+    </footer>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  WEB AUDIO ENGINE
+// ════════════════════════════════════════
+let ctx = null;
+let masterGain = null;
+let isPlaying = false;
+let currentSong = 0;
+let loopEndTime = 0;
+let loopTimer = null;
+
+function getCtx() {
+    if (!ctx) {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = ctx.createGain();
+        masterGain.gain.value = 0.6;
+        masterGain.connect(ctx.destination);
+    }
+    return ctx;
+}
+
+function playTone(freq, startTime, duration, type, vol) {
+    const ac = getCtx();
+    const osc = ac.createOscillator();
+    const g = ac.createGain();
+    osc.type = type || 'square';
+    osc.frequency.setValueAtTime(freq, startTime);
+    g.gain.setValueAtTime(0, startTime);
+    g.gain.linearRampToValueAtTime(vol || 0.15, startTime + 0.01);
+    g.gain.setValueAtTime(vol || 0.15, startTime + duration - 0.02);
+    g.gain.linearRampToValueAtTime(0, startTime + duration);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.05);
+}
+
+function playNoise(startTime, duration, vol, decay) {
+    const ac = getCtx();
+    const len = Math.ceil(ac.sampleRate * duration);
+    const buf = ac.createBuffer(1, len, ac.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.exp(-i/(ac.sampleRate*decay));
+    const src = ac.createBufferSource();
+    const g = ac.createGain();
+    src.buffer = buf;
+    g.gain.value = vol;
+    src.connect(g); g.connect(masterGain);
+    src.start(startTime);
+}
+
+// ════════════════════════════════════════
+//  4 SONGS
+// ════════════════════════════════════════
+const songs = [
+    { name: "Funky Fresh (dialup remix)",  fn: songFunky  },
+    { name: "Purple Rain of Data",          fn: songPurple },
+    { name: "Sk8er Beatz 2002",            fn: songSk8er  },
+    { name: "Ozzy's MIDI Madness",         fn: songOzzy   }
+];
+
+function songFunky(t) {
+    const b = 60/110;
+    const bass = [130.81,130.81,146.83,155.56,130.81,130.81,116.54,123.47];
+    bass.forEach((f,i) => playTone(f, t+i*b, b*1.5, 'sine', 0.28));
+    const mel = [523,659,587,523,659,784,659,523,587,523,440,493,523,0,659,784];
+    mel.forEach((f,i) => { if(f) playTone(f, t+i*(b/2), b*0.38, 'square', 0.13); });
+    [0,2,4,6].forEach(beat => [261,329,392].forEach(f => playTone(f, t+beat*b, b*0.14, 'sawtooth', 0.06)));
+    for(let i=0;i<8;i++){
+        const bt=t+i*b;
+        playNoise(bt,0.08,0.5,0.08);
+        playNoise(bt+b*0.5,0.06,0.3,0.04);
+        playNoise(bt+b*0.25,0.03,0.15,0.012);
+        playNoise(bt+b*0.75,0.03,0.15,0.012);
+    }
+    return t+8*b;
+}
+
+function songPurple(t) {
+    const b = 60/72;
+    const chords = [[293.66,369.99,440],[233.08,293.66,349.23],[349.23,440,523.25],[261.63,329.63,392]];
+    chords.forEach((ch,ci) => ch.forEach(f => playTone(f, t+ci*2*b, 2*b*0.88, 'triangle', 0.11)));
+    chords.forEach((ch,ci) => ch.forEach(f => playTone(f, t+(ci+4)*2*b, 2*b*0.88, 'triangle', 0.11)));
+    const mel = [587,659,698,659,587,523,587,0,587,659,784,698,659,587,523,440];
+    mel.forEach((f,i) => { if(f) playTone(f, t+i*b*0.5, b*0.44, 'sine', 0.21); });
+    for(let i=0;i<8;i++){
+        playNoise(t+i*b,0.1,0.45,0.09);
+        playNoise(t+i*b+b*0.5,0.07,0.28,0.04);
+    }
+    return t+8*b;
+}
+
+function songSk8er(t) {
+    const b = 60/140;
+    const prog = [220,196,220,246.94,220,196,174.61,196];
+    prog.forEach((f,i) => {
+        playTone(f, t+i*b, b*0.82, 'sawtooth', 0.16);
+        playTone(f*1.5, t+i*b, b*0.82, 'sawtooth', 0.08);
+    });
+    const mel = [880,880,784,880,1046,988,880,784,740,784,880,0,880,784,698,784];
+    mel.forEach((f,i) => { if(f) playTone(f, t+i*(b/2), b*0.28, 'square', 0.11); });
+    for(let i=0;i<8;i++){
+        const bt=t+i*b;
+        playNoise(bt,0.07,0.55,0.08);
+        playNoise(bt+b*0.25,0.025,0.14,0.012);
+        playNoise(bt+b*0.5,0.06,0.32,0.04);
+        playNoise(bt+b*0.75,0.025,0.14,0.012);
+    }
+    return t+8*b;
+}
+
+function songOzzy(t) {
+    const b = 60/95;
+    const bass = [110,110,123.47,116.54,110,103.83,110,116.54];
+    bass.forEach((f,i) => playTone(f, t+i*b, b*0.9, 'sine', 0.28));
+    const lead = [440,493,523,587,523,493,440,0,392,440,493,523,587,659,587,523];
+    lead.forEach((f,i) => { if(f) { playTone(f, t+i*(b/2), b*0.41,'sine',0.19); playTone(f*1.005,t+i*(b/2),b*0.41,'sine',0.09); } });
+    [1,3,5,7].forEach(beat => [220,277.18,329.63].forEach(f => playTone(f, t+beat*b, b*0.18, 'sawtooth', 0.07)));
+    for(let i=0;i<8;i++){
+        const bt=t+i*b;
+        playNoise(bt,0.08,0.52,0.08);
+        playNoise(bt+b*0.375,0.06,0.3,0.07);
+        playNoise(bt+b*0.5,0.06,0.3,0.04);
+        [0.125,0.25,0.375,0.625,0.75,0.875].forEach(o => playNoise(bt+o*b,0.025,0.13,0.012));
+    }
+    return t+8*b;
+}
+
+// ════════════════════════════════════════
+//  PLAYBACK CONTROL
+// ════════════════════════════════════════
+function scheduleLoop() {
+    if (!isPlaying) return;
+    const ac = getCtx();
+    if (loopEndTime - ac.currentTime < 0.5) {
+        loopEndTime = songs[currentSong].fn(loopEndTime > ac.currentTime ? loopEndTime : ac.currentTime + 0.05);
+    }
+    loopTimer = setTimeout(scheduleLoop, 200);
+}
+
+function togglePlay() {
+    if (isPlaying) stopMusic(); else startMusic();
+}
+
+function startMusic() {
+    const ac = getCtx();
+    if (ac.state === 'suspended') ac.resume();
+    isPlaying = true;
+    loopEndTime = songs[currentSong].fn(ac.currentTime + 0.05);
+    scheduleLoop();
+    document.getElementById('playBtn').textContent = '⏸ PAUSE';
+    document.getElementById('playBtn').classList.add('active');
+    setVis(true);
+    showToast('♪ Now playing: ' + songs[currentSong].name);
+}
+
+function stopMusic() {
+    isPlaying = false;
+    clearTimeout(loopTimer);
+    document.getElementById('playBtn').textContent = '▶ PLAY';
+    document.getElementById('playBtn').classList.remove('active');
+    setVis(false);
+    showToast('⏸ Paused');
+}
+
+function nextSong() {
+    currentSong = (currentSong+1) % songs.length;
+    document.getElementById('songName').textContent = songs[currentSong].name;
+    if (isPlaying) { stopMusic(); startMusic(); } else showToast('Track: ' + songs[currentSong].name);
+    sfxTick();
+}
+
+function prevSong() {
+    currentSong = (currentSong-1+songs.length) % songs.length;
+    document.getElementById('songName').textContent = songs[currentSong].name;
+    if (isPlaying) { stopMusic(); startMusic(); } else showToast('Track: ' + songs[currentSong].name);
+    sfxTick();
+}
+
+function setVolume(v) { if(masterGain) masterGain.gain.value = v/100; }
+
+function setVis(on) {
+    document.querySelectorAll('.vis-bar').forEach(b => on ? b.classList.remove('paused') : b.classList.add('paused'));
+}
+
+// ════════════════════════════════════════
+//  SOUND EFFECTS
+// ════════════════════════════════════════
+function playModem() {
+    const ac = getCtx();
+    if (ac.state === 'suspended') ac.resume();
+    const t = ac.currentTime;
+    // dial tone
+    playTone(400,t,1.0,'sine',0.14); playTone(450,t,1.0,'sine',0.14);
+    // ring bursts
+    for(let i=0;i<3;i++){ playTone(480,t+1.2+i*0.4,0.18,'sine',0.18); playTone(620,t+1.2+i*0.4,0.18,'sine',0.18); }
+    // carrier chaos
+    const cf=[300,1200,2400,1800,2100,900,1500,3000,2200,600,1700,800,2800,400,1100];
+    cf.forEach((f,i)=>playTone(f,t+2.6+i*0.17,0.15,i%2===0?'sine':'square',0.17));
+    // handshake squeal
+    for(let i=0;i<22;i++) playTone(800+Math.sin(i)*600+i*55, t+5.4+i*0.08, 0.07, 'sine', 0.19);
+    // connected beeps
+    playTone(1200,t+7.2,0.14,'sine',0.24); playTone(2400,t+7.38,0.14,'sine',0.24); playTone(1800,t+7.56,0.3,'sine',0.2);
+    showToast('📡 CONNECTED AT 56K bps!');
+}
+
+function playChime() {
+    const ac = getCtx(); if(ac.state==='suspended') ac.resume();
+    const t=ac.currentTime;
+    [880,1108,1318].forEach((f,i)=>playTone(f,t+i*0.12,0.35,'sine',0.22));
+    showToast('🔔 *ding!*');
+}
+
+function playGuitar() {
+    const ac = getCtx(); if(ac.state==='suspended') ac.resume();
+    const t=ac.currentTime;
+    [220,330,440,660].forEach(f=>playTone(f,t,0.8,'sawtooth',0.14));
+    showToast('🤘 ROCK ON!!');
+}
+
+function playNote() {
+    const ac = getCtx(); if(ac.state==='suspended') ac.resume();
+    const t=ac.currentTime;
+    [523,659,784,1046].forEach((f,i)=>playTone(f,t+i*0.1,0.4,'sine',0.19));
+    showToast('🎵 la la la!');
+}
+
+function playStar() {
+    const ac = getCtx(); if(ac.state==='suspended') ac.resume();
+    const t=ac.currentTime;
+    [1046,1318,1567,2093,1567,1318,1046].forEach((f,i)=>playTone(f,t+i*0.08,0.1,'sine',0.17));
+    showToast('✨ sparkle!');
+}
+
+function sfxLike() {
+    const ac = getCtx(); if(ac.state==='suspended') ac.resume();
+    const t=ac.currentTime;
+    playTone(880,t,0.07,'sine',0.14); playTone(1046,t+0.07,0.1,'sine',0.14);
+}
+
+function sfxTick() {
+    const ac = getCtx(); if(ac.state==='suspended') ac.resume();
+    playTone(440,ac.currentTime,0.05,'square',0.1);
+}
+
+function sfxPost() {
+    const ac = getCtx(); if(ac.state==='suspended') ac.resume();
+    const t=ac.currentTime;
+    [523,659,784].forEach((f,i)=>playTone(f,t+i*0.07,0.11,'square',0.13));
+}
+
+// ════════════════════════════════════════
+//  UI
+// ════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.style.display='none', 2500);
+}
+
+const navMsgs = {
+    home:'🏠 You are already home!', profile:'👤 Loading your profile...', friends:'👥 You have 8 friends!',
+    messages:'📧 3 new messages from XxOzzyxX!', chatroom:'💬 A/S/L?',
+    photos:'📸 Loading... (may take 5 mins on dialup 😅)',
+    comment:'💭 Comment posted!', share:'📤 Shared to your wall!', webring:'🔗 Jumping to random 90s site...'
+};
+
+function navClick(f) { sfxTick(); showToast(navMsgs[f]||'✨ Coming soon!'); }
+
+function likePost(btn) {
+    sfxLike();
+    const n = parseInt(btn.textContent.match(/\d+/)[0]);
+    btn.textContent = '👍 LIKE ('+(n+1)+')';
+    btn.style.background = '#FF1493';
+    showToast('👍 Liked!');
+}
+
+function createPost() {
+    const content = document.getElementById('post-content').value.trim();
+    if (!content) { showToast('⚠️ Type something first!'); return; }
+    sfxPost();
+    const c = document.getElementById('posts-container');
+    const p = document.createElement('div'); p.className='post';
+    const avs=['😎','🎸','🌟','💜','🎵','✨'];
+    const cols=['#FF69B4','#FFD700','#00FFFF','#98FB98','#DDA0DD'];
+    const av=avs[Math.floor(Math.random()*avs.length)];
+    const bg=cols[Math.floor(Math.random()*cols.length)];
+    p.innerHTML=`<div class="post-header"><div class="avatar" style="background:${bg}">${av}</div><div><div class="username">YOU</div><div class="timestamp">posted just now</div></div></div><div class="post-content">${content}</div><div class="post-actions"><button onclick="likePost(this)">👍 LIKE (0)</button><button onclick="navClick('comment')">💬 COMMENT</button><button onclick="navClick('share')">📤 SHARE</button></div>`;
+    c.insertBefore(p,c.firstChild);
+    document.getElementById('post-content').value='';
+    showToast('✅ Post is live!');
+}
+
+let count=42069;
+setInterval(()=>{ count++; document.getElementById('visitor-count').textContent=count; },5000);
+document.getElementById('songName').textContent=songs[currentSong].name;
+</script>
 </body>
 </html>
